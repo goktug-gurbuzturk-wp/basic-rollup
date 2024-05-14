@@ -5,9 +5,9 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"math/big"
+	"os"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -71,7 +71,7 @@ func main() {
 	fmt.Printf("RLP-encoded transaction: 0x%x\n", rlpEncodedTx)
 
 	// Storing the RLP-encoded transaction in a file
-	err = ioutil.WriteFile("transaction.rlp", rlpEncodedTx, 0644)
+	err = os.WriteFile("transaction.rlp", rlpEncodedTx, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}

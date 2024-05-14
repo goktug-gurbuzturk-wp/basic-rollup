@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"math/big"
+	"os"
 
 	rollup "app/bindings"
 
@@ -34,7 +35,15 @@ func main() {
 		log.Fatalf("Failed to instantiate a RollupDataLayer contract: %v", err)
 	}
 
-	tx, err := rollupDataLayer.AddRollupTransaction(auth, []byte("example transaction data2"))
+	// Read the RLP-encoded transaction from the file using os.ReadFile
+	data, err := os.ReadFile("generate-example-transactions/transaction.rlp")
+	if err != nil {
+		log.Fatalf("Failed to read transaction data: %v", err)
+	}
+	log.Printf("Read transaction data: %v", data)
+
+	// Submit the transaction to the smart contract
+	tx, err := rollupDataLayer.AddRollupTransaction(auth, data)
 	if err != nil {
 		log.Fatalf("Failed to send transaction: %v", err)
 	}
