@@ -11,15 +11,23 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	client, err := ethclient.Dial("http://localhost:8545")
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	layer1NodeUrl := os.Getenv("LAYER1_NODE_URL")
+	client, err := ethclient.Dial(layer1NodeUrl)
 	if err != nil {
 		log.Fatalf("Failed to connect to the Ethereum client: %v", err)
 	}
 
-	privateKey, err := crypto.HexToECDSA("ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80") // sequencer private key - first account in anvil
+	sequencerPrivateKey := os.Getenv("SEQUENCER_PRIVATE_KEY")
+	privateKey, err := crypto.HexToECDSA(sequencerPrivateKey)
 	if err != nil {
 		log.Fatalf("Could not parse private key: %v", err)
 	}
@@ -29,14 +37,15 @@ func main() {
 		log.Fatalf("Failed to create authorized transactor: %v", err)
 	}
 
-	address := common.HexToAddress("0x5fbdb2315678afecb367f032d93f642f64180aa3")
+	contractAddress := os.Getenv("ROLLUP_DATA_LAYER_CONTRACT_ADDRESS")
+	address := common.HexToAddress(contractAddress)
 	rollupDataLayer, err := rollup.NewRollupDataLayer(address, client)
 	if err != nil {
 		log.Fatalf("Failed to instantiate a RollupDataLayer contract: %v", err)
 	}
 
 	// Read the RLP-encoded transaction from the file using os.ReadFile
-	data, err := os.ReadFile("generate-example-transactions/transaction.rlp")
+	data, err := os.ReadFile("../transaction-builder/transaction.rlp")
 	if err != nil {
 		log.Fatalf("Failed to read transaction data: %v", err)
 	}

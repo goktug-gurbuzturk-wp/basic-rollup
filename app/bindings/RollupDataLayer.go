@@ -31,7 +31,7 @@ var (
 
 // RollupDataLayerMetaData contains all meta data concerning the RollupDataLayer contract.
 var RollupDataLayerMetaData = &bind.MetaData{
-	ABI: "[{\"type\":\"constructor\",\"inputs\":[{\"name\":\"_sequencer\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"addRollupTransaction\",\"inputs\":[{\"name\":\"transaction\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"sequencer\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"transactions\",\"inputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"stateMutability\":\"view\"}]",
+	ABI: "[{\"type\":\"constructor\",\"inputs\":[{\"name\":\"_sequencer\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"addRollupTransaction\",\"inputs\":[{\"name\":\"transaction\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"genesisBlock\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"string\",\"internalType\":\"string\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"sequencer\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"transactions\",\"inputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"stateMutability\":\"view\"}]",
 }
 
 // RollupDataLayerABI is the input ABI used to generate the binding from.
@@ -178,6 +178,37 @@ func (_RollupDataLayer *RollupDataLayerTransactorRaw) Transfer(opts *bind.Transa
 // Transact invokes the (paid) contract method with params as input values.
 func (_RollupDataLayer *RollupDataLayerTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	return _RollupDataLayer.Contract.contract.Transact(opts, method, params...)
+}
+
+// GenesisBlock is a free data retrieval call binding the contract method 0x4cdc9c63.
+//
+// Solidity: function genesisBlock() view returns(string)
+func (_RollupDataLayer *RollupDataLayerCaller) GenesisBlock(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _RollupDataLayer.contract.Call(opts, &out, "genesisBlock")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// GenesisBlock is a free data retrieval call binding the contract method 0x4cdc9c63.
+//
+// Solidity: function genesisBlock() view returns(string)
+func (_RollupDataLayer *RollupDataLayerSession) GenesisBlock() (string, error) {
+	return _RollupDataLayer.Contract.GenesisBlock(&_RollupDataLayer.CallOpts)
+}
+
+// GenesisBlock is a free data retrieval call binding the contract method 0x4cdc9c63.
+//
+// Solidity: function genesisBlock() view returns(string)
+func (_RollupDataLayer *RollupDataLayerCallerSession) GenesisBlock() (string, error) {
+	return _RollupDataLayer.Contract.GenesisBlock(&_RollupDataLayer.CallOpts)
 }
 
 // Sequencer is a free data retrieval call binding the contract method 0x5c1bba38.
