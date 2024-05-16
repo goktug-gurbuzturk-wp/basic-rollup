@@ -4,6 +4,7 @@ import (
 	"log"
 	"math/big"
 	"os"
+	"path/filepath"
 
 	rollup "app/bindings"
 
@@ -44,18 +45,28 @@ func main() {
 		log.Fatalf("Failed to instantiate a RollupDataLayer contract: %v", err)
 	}
 
-	// Read the RLP-encoded transaction from the file using os.ReadFile
-	data, err := os.ReadFile("../transaction-builder/transaction.rlp")
+	// Reading multiple RLP-encoded transactions from a directory
+	files, err := filepath.Glob("../transaction-builder/*.rlp")
 	if err != nil {
-		log.Fatalf("Failed to read transaction data: %v", err)
-	}
-	log.Printf("Read transaction data: %v", data)
-
-	// Submit the transaction to the smart contract
-	tx, err := rollupDataLayer.AddRollupTransaction(auth, data)
-	if err != nil {
-		log.Fatalf("Failed to send transaction: %v", err)
+		log.Fatalf("Failed to list transaction files: %v", err)
 	}
 
-	log.Printf("Transaction submitted: %s", tx.Hash().Hex())
+	for _, file := range files {
+		data, err := os.ReadFile(file)
+		if err != nil {
+			log.Printf("Failed to read transaction data from %s: %v", file, err)
+			continue
+		}
+
+		log.Printf("Read transaction data from %s: %v", file, data)
+
+		// Submit the transaction to the smart contract
+		tx, err := rollupDataLayer.AddRollupTransaction(auth, data)
+		if err != nil {
+			log.Printf("Failed to send transaction from %s: %v", file, err)
+			continue
+		}
+
+		log.Printf("Transaction submitted from %s: %s", file, tx.Hash().Hex())
+	}
 }
